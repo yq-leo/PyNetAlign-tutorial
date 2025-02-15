@@ -1,4 +1,4 @@
-Welcome to Lumache's documentation!
+Welcome to PyNetAlign's documentation!
 ===================================
 
 **PyNetAlign** is a Python library for network alignment tasks built upon `PyTorch <https://pytorch.org>`_ and `PyTorch Geometric <https://pytorch-geometric.readthedocs.io/en/latest/>`_.
