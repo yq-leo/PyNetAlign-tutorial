@@ -157,5 +157,5 @@ cython_debug/
 
 **.DS_Store
 .idea/
-datasets/
+/datasets/
 docs/source/generated/
