@@ -1,10 +1,16 @@
 # Configuration file for the Sphinx documentation builder.
 
-# -- Project information
+import os
+import sys
+import datetime
 
-project = 'Lumache'
-copyright = '2021, Graziella'
-author = 'Graziella'
+# Add the parent directory (where PyNetAlign is) to sys.path
+sys.path.insert(0, os.path.abspath("../.."))
+
+# -- Project information
+project = 'PyNetAlign'
+copyright = f'{datetime.datetime.now().year}, Qi Yu'
+author = 'Qi Yu'
 
 release = '0.1'
 version = '0.1.0'
@@ -17,12 +23,21 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.intersphinx',
+    "sphinx.ext.napoleon",
+    "sphinx.ext.viewcode",
+    # "sphinx_autodoc_typehints",
 ]
 
 intersphinx_mapping = {
-    'python': ('https://docs.python.org/3/', None),
+    'python': ('https://docs.python.org/', None),
     'sphinx': ('https://www.sphinx-doc.org/en/master/', None),
 }
+
+add_module_names = False
+
+# typehints_use_rtype = True
+# typehints_defaults = 'comma'
+
 intersphinx_disabled_domains = ['std']
 
 templates_path = ['_templates']
