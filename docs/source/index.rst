@@ -26,3 +26,4 @@ Welcome to PyNetAlign's documentation!
    :caption: Package Reference
 
    modules/data
+   modules/datasets
