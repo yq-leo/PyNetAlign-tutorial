@@ -1,1 +1,2 @@
-import PyNetAlign.data
+from .data import *
+from .datasets import *

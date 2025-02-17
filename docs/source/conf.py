@@ -25,7 +25,6 @@ extensions = [
     'sphinx.ext.intersphinx',
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
-    # "sphinx_autodoc_typehints",
 ]
 
 intersphinx_mapping = {

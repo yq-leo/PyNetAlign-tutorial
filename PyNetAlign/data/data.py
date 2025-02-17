@@ -17,7 +17,7 @@ class Dataset:
         assert 0 < ratio < 1, 'Training ratio must be in (0, 1)'
         assert precision in [32, 64], 'Precision must be either 32 or 64'
 
-        self.root = root
+        self.root = Path(root)
         self.name = name
         self.ratio = ratio
         self.seed = seed
@@ -28,7 +28,7 @@ class Dataset:
         self.train_data, self.test_data = self._train_test_split()
 
     def _load_dataset(self):
-        data_dict = torch.load(f'{self.root}/{self.name}.pt', weights_only=True)
+        data_dict = torch.load(Path.joinpath(self.root, f'{self.name}.pt'), weights_only=True)
         pyg_graphs = list()
         for gid, gname in enumerate(data_dict['graphs']):
             num_nodes = data_dict['number_of_nodes'][gid]
@@ -117,16 +117,9 @@ class Dataset:
         return output
 
 
-def test_function_for_rst():
-    r"""
-    This function is used to test the code snippets in the documentation.
-    """
-    pass
-
-
 if __name__ == '__main__':
-    for f in os.listdir('../datasets/pyg'):
+    for f in os.listdir('../../datasets/pyg'):
         if f.endswith('.pt'):
             dataset_name = f[:-3]
-            dataset = Dataset(root='../datasets/pyg', name=dataset_name, ratio=0.2, precision=64)
+            dataset = Dataset(root='../../datasets/pyg', name=dataset_name, ratio=0.2, precision=64)
             print(dataset)
