@@ -23,11 +23,11 @@ class Dataset:
         self.seed = seed
         self.precision = precision
 
-        self.pyg_graphs, self.anchor_links = self._load_dataset()
-        self.__validate()
-        self.train_data, self.test_data = self._train_test_split()
+        self.pyg_graphs, self.anchor_links = self.load_dataset()
+        self._validate()
+        self.train_data, self.test_data = self.train_test_split()
 
-    def _load_dataset(self):
+    def load_dataset(self):
         data_dict = torch.load(Path.joinpath(self.root, f'{self.name}.pt'), weights_only=True)
         pyg_graphs = list()
         for gid, gname in enumerate(data_dict['graphs']):
@@ -40,7 +40,7 @@ class Dataset:
         anchor_links = data_dict['anchor_links']
         return pyg_graphs, anchor_links
 
-    def _train_test_split(self):
+    def train_test_split(self):
         num_anchor = self.anchor_links.shape[0]
         if self.seed is not None:
             torch.manual_seed(self.seed)
@@ -48,7 +48,10 @@ class Dataset:
         train_size = int(num_anchor * self.ratio)
         return self.anchor_links[perm[:train_size]], self.anchor_links[perm[train_size:]]
 
-    def __validate(self):
+    def _check_integrity(self, root):
+        raise NotImplementedError
+
+    def _validate(self):
         assert hasattr(self, 'pyg_graphs') and hasattr(self, 'anchor_links'), 'Dataset has not been loaded yet, wrong place for validation'
         assert type(self.pyg_graphs) in [list, tuple], 'Graphs must be stored in a list or tuple'
         assert len(self.pyg_graphs) > 1, 'At least two graphs are required for alignment'
@@ -66,7 +69,6 @@ class Dataset:
 
     def __str__(self):
         network_count = len(self.pyg_graphs)  # Number of networks (Assuming stored in a list)
-
         # Header
         output = (
                 f"Dataset: {self.name}\n"
@@ -74,19 +76,16 @@ class Dataset:
                 f"{'Graphs':<20}" + "".join([f"{self.pyg_graphs[i].name:>15}" for i in range(network_count)]) +
                 f"\n{'-' * 60}\n"
         )
-
         # Number of Nodes per graph
         output += (
                 f"{'# Nodes':<20}" +
                 "".join([f"{self.pyg_graphs[i].num_nodes:>15,}" for i in range(network_count)]) + "\n"
         )
-
         # Number of Edges per graph
         output += (
                 f"{'# Edges':<20}" +
                 "".join([f"{self.pyg_graphs[i].num_edges:>15,}" for i in range(network_count)]) + "\n"
         )
-
         # Node Attributes Dimension per graph
         output += (
                 f"{'# Node Attributes':<20}" +
@@ -95,7 +94,6 @@ class Dataset:
                     for i in range(network_count)
                 ]) + "\n"
         )
-
         # Edge Attributes Dimension per graph
         output += (
                 f"{'# Edge Attributes':<20}" +
@@ -104,7 +102,6 @@ class Dataset:
                     for i in range(network_count)
                 ]) + "\n"
         )
-
         # Anchor Links (Train/Test)
         output += (
             f"{'=' * 60}\n"
@@ -113,7 +110,6 @@ class Dataset:
             f"{f'Count (ratio: {self.ratio})':<20}{self.train_data.shape[0]:>15,}{self.test_data.shape[0]:>15,}\n"
             f"{'=' * 60}"
         )
-
         return output
 
 

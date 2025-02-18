@@ -6,8 +6,8 @@ from PyNetAlign.data import Dataset
 from .utils import download_file_from_google_drive
 
 
-class PhoneEmail(Dataset):
-    r"""Phone-Email dataset for alignment."""
+class Douban(Dataset):
+    r"""Douban dataset for alignment."""
     def __init__(self,
                  root: Union[str, Path],
                  download: Optional[bool] = False,
@@ -17,14 +17,14 @@ class PhoneEmail(Dataset):
 
         if download:
             download_file_from_google_drive(
-                remote_file_id='13BklpBEFjT73Xk8H-daPGzBx-xFbpO0P',
-                save_filename='phone-email.pt',
+                remote_file_id='1KnP4yzQIZ9J36x-or8uViYVc1eyacn95',
+                save_filename='douban.pt',
                 root=root)
 
         if not self._check_integrity(root):
-            raise RuntimeError('Phone-Email dataset not found or corrupted. You can use download=True to download it')
+            raise RuntimeError('Douban dataset not found or corrupted. You can use download=True to download it')
 
-        super(PhoneEmail, self).__init__(root=root, name='phone-email', ratio=ratio, precision=precision, seed=seed)
+        super(Douban, self).__init__(root=root, name='douban', ratio=ratio, precision=precision, seed=seed)
 
     def _check_integrity(self, root):
-        return os.path.exists(os.path.join(root, 'phone-email.pt'))
+        return os.path.exists(os.path.join(root, 'douban.pt'))

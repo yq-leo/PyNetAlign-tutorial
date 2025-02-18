@@ -6,8 +6,8 @@ from PyNetAlign.data import Dataset
 from .utils import download_file_from_google_drive
 
 
-class PhoneEmail(Dataset):
-    r"""Phone-Email dataset for alignment."""
+class ArXiv(Dataset):
+    r"""ArXiv dataset for alignment."""
     def __init__(self,
                  root: Union[str, Path],
                  download: Optional[bool] = False,
@@ -17,14 +17,14 @@ class PhoneEmail(Dataset):
 
         if download:
             download_file_from_google_drive(
-                remote_file_id='13BklpBEFjT73Xk8H-daPGzBx-xFbpO0P',
-                save_filename='phone-email.pt',
+                remote_file_id='15IEZkaaK9nD1OBMWDvITN8UdRB_3s4G0',
+                save_filename='arxiv.pt',
                 root=root)
 
         if not self._check_integrity(root):
-            raise RuntimeError('Phone-Email dataset not found or corrupted. You can use download=True to download it')
+            raise RuntimeError('ArXiv dataset not found or corrupted. You can use download=True to download it')
 
-        super(PhoneEmail, self).__init__(root=root, name='phone-email', ratio=ratio, precision=precision, seed=seed)
+        super(ArXiv, self).__init__(root=root, name='arxiv', ratio=ratio, precision=precision, seed=seed)
 
     def _check_integrity(self, root):
-        return os.path.exists(os.path.join(root, 'phone-email.pt'))
+        return os.path.exists(os.path.join(root, 'arxiv.pt'))
