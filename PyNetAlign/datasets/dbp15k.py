@@ -13,7 +13,7 @@ class DBP15K_FR_EN(Dataset):
                  download: Optional[bool] = False,
                  ratio: Optional[float] = 0.2,
                  precision: Optional[int] = 32,
-                 seed: Optional[int] = None):
+                 seed: Optional[int] = 0):
 
         if download:
             download_file_from_google_drive(
@@ -37,7 +37,7 @@ class DBP15K_JA_EN(Dataset):
                  download: Optional[bool] = False,
                  ratio: Optional[float] = 0.2,
                  precision: Optional[int] = 32,
-                 seed: Optional[int] = None):
+                 seed: Optional[int] = 0):
 
         if download:
             download_file_from_google_drive(
@@ -61,7 +61,7 @@ class DBP15K_ZH_EN(Dataset):
                  download: Optional[bool] = False,
                  ratio: Optional[float] = 0.2,
                  precision: Optional[int] = 32,
-                 seed: Optional[int] = None):
+                 seed: Optional[int] = 0):
 
         if download:
             download_file_from_google_drive(

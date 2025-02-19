@@ -12,18 +12,11 @@ Welcome to PyNetAlign's documentation!
    This project is under active development.
 
 
-..
-    .. toctree::
-        :maxdepth: 1
-        :caption: Contents
-
-        usage
-        api
-
-
 .. toctree::
    :maxdepth: 1
    :caption: Package Reference
 
    modules/data
    modules/datasets
+   modules/algorithms
+   modules/metrics

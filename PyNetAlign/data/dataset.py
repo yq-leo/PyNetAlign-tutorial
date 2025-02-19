@@ -13,7 +13,7 @@ class Dataset:
                  name: str,
                  ratio: Optional[float] = 0.2,
                  precision: Optional[int] = 32,
-                 seed: Optional[int] = None):
+                 seed: Optional[int] = 0):
         assert 0 < ratio < 1, 'Training ratio must be in (0, 1)'
         assert precision in [32, 64], 'Precision must be either 32 or 64'
 
@@ -21,7 +21,7 @@ class Dataset:
         self.name = name
         self.ratio = ratio
         self.seed = seed
-        self.precision = precision
+        self.precision = torch.float32 if precision == 32 else torch.float64
 
         self.pyg_graphs, self.anchor_links = self.load_dataset()
         self._validate()
@@ -32,8 +32,8 @@ class Dataset:
         pyg_graphs = list()
         for gid, gname in enumerate(data_dict['graphs']):
             num_nodes = data_dict['number_of_nodes'][gid]
-            x = data_dict['node_attributes'][gid] if 'node_attributes' in data_dict else None
-            edge_attr = data_dict['edge_attributes'][gid] if 'edge_attributes' in data_dict else None
+            x = data_dict['node_attributes'][gid].to(self.precision) if 'node_attributes' in data_dict else None
+            edge_attr = data_dict['edge_attributes'][gid].to(self.precision) if 'edge_attributes' in data_dict else None
             edge_index = data_dict['edges'][gid]
             pyg_graph = Data(name=gname, num_nodes=num_nodes, x=x, edge_index=edge_index, edge_attr=edge_attr)
             pyg_graphs.append(pyg_graph)
@@ -42,9 +42,10 @@ class Dataset:
 
     def train_test_split(self):
         num_anchor = self.anchor_links.shape[0]
-        if self.seed is not None:
-            torch.manual_seed(self.seed)
+        rng_state = torch.get_rng_state()
+        torch.manual_seed(self.seed)
         perm = torch.randperm(num_anchor)
+        torch.set_rng_state(rng_state)
         train_size = int(num_anchor * self.ratio)
         return self.anchor_links[perm[:train_size]], self.anchor_links[perm[train_size:]]
 
