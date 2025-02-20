@@ -21,7 +21,8 @@ class FINAL(BaseModel):
         super(FINAL, self).__init__(precision=precision)
 
         assert isinstance(dataset, Dataset), 'Input dataset must be a PyNetAlign Dataset object'
-        assert gid1 < len(dataset.pyg_graphs) and gid2 < len(dataset.pyg_graphs), 'Invalid graph IDs'
+        assert 0 <= gid1 < len(dataset.pyg_graphs) and 0 <= gid2 < len(dataset.pyg_graphs), 'Invalid graph IDs'
+        assert gid1 != gid2, 'Cannot align a graph with itself'
         assert 0 <= alpha <= 1, 'Alpha must be in [0, 1]'
 
         self.alpha = alpha
@@ -68,7 +69,7 @@ class FINAL(BaseModel):
         self.preprocessed = True
 
     def forward(self, *args, **kwargs):
-        assert self.preprocessed, 'Preprocessing is required before running the algorithm'
+        assert self.preprocessed, 'Preprocessing is required before running the algorithm, call preprocess() method first'
 
         prev_s = torch.clone(self.s)
         M = self.N * self.s

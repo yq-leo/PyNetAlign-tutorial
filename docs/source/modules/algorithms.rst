@@ -9,5 +9,5 @@ PyNetAlign.algorithms
     :template: autosummary/only_class.rst
 
     IsoRank
+    IONE
     FINAL
-

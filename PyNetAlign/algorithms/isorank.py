@@ -20,7 +20,8 @@ class IsoRank(BaseModel):
         super(IsoRank, self).__init__(precision=precision)
 
         assert isinstance(dataset, Dataset), 'Input dataset must be a PyNetAlign Dataset object'
-        assert gid1 < len(dataset.pyg_graphs) and gid2 < len(dataset.pyg_graphs), 'Invalid graph IDs'
+        assert 0 <= gid1 < len(dataset.pyg_graphs) and 0 <= gid2 < len(dataset.pyg_graphs), 'Invalid graph IDs'
+        assert gid1 != gid2, 'Cannot align a graph with itself'
         assert 0 <= alpha <= 1, 'Alpha must be in [0, 1]'
 
         self.n1 = dataset.pyg_graphs[gid1].num_nodes
