@@ -41,6 +41,8 @@ class FINAL(BaseModel):
         self.h[self.anchors[:, 1], self.anchors[:, 0]] = 1
         self.s = torch.clone(self.h)
 
+        self.preprocessed = False
+
     def preprocess(self):
         num_node_attr = self.node_attr1.shape[1]
         num_edge_attr = self.edge_attr1_adj.shape[0]
@@ -63,7 +65,11 @@ class FINAL(BaseModel):
 
         self.N = self.N * D
 
+        self.preprocessed = True
+
     def forward(self, *args, **kwargs):
+        assert self.preprocessed, 'Preprocessing is required before running the algorithm'
+
         prev_s = torch.clone(self.s)
         M = self.N * self.s
         S = torch.zeros_like(self.N)
@@ -73,23 +79,23 @@ class FINAL(BaseModel):
 
         self.s = (1 - self.alpha) * self.h + self.alpha * self.N * S
         diff = torch.norm(self.s - prev_s)
-        return self.s, diff
+        return self.s.T, diff
 
     def init_node_feat(self, graph):
         if graph.num_node_features == 0:
-            node_attr = torch.ones(graph.num_nodes, 1, dtype=self.precision).to(graph.device)
+            node_attr = torch.ones(graph.num_nodes, 1, dtype=self.precision).to(graph.edge_index.device)
         else:
             node_attr = graph.x.to(self.precision)
         return F.normalize(node_attr, p=2, dim=1)
 
     def init_edge_feat_adj(self, graph):
         if graph.edge_attr is None:
-            edge_attr = torch.ones(graph.edge_index.shape[1], 1, dtype=self.precision).to(graph.device)
+            edge_attr = torch.ones(graph.edge_index.shape[1], 1, dtype=self.precision).to(graph.edge_index.device)
         else:
             edge_attr = graph.edge_attr.to(self.precision)
         edge_attr = F.normalize(edge_attr, p=2, dim=1)
 
-        edge_attr_adj = torch.zeros(graph.edge_index.shape[1], graph.num_nodes, graph.num_nodes, dtype=self.precision)
+        edge_attr_adj = torch.zeros(edge_attr.shape[1], graph.num_nodes, graph.num_nodes, dtype=self.precision)
         edge_attr_adj[:, graph.edge_index[0], graph.edge_index[1]] = edge_attr.T
 
         return edge_attr_adj

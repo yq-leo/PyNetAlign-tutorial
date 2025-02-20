@@ -4,6 +4,7 @@ import torch.nn.functional as F
 from torch_geometric.utils import to_dense_adj
 
 from PyNetAlign.data import Dataset
+from PyNetAlign.datasets import PhoneEmail
 from PyNetAlign.utils import get_anchor_pairs
 from .base_model import BaseModel
 
@@ -26,8 +27,10 @@ class IsoRank(BaseModel):
         self.n2 = dataset.pyg_graphs[gid2].num_nodes
         self.alpha = alpha
 
-        self.adj1 = to_dense_adj(dataset.pyg_graphs[gid1].edge_index).squeeze()
-        self.adj2 = to_dense_adj(dataset.pyg_graphs[gid2].edge_index).squeeze()
+        adj1 = to_dense_adj(dataset.pyg_graphs[gid1].edge_index).squeeze()
+        adj2 = to_dense_adj(dataset.pyg_graphs[gid2].edge_index).squeeze()
+        self.adj1 = F.normalize(adj1, p=1, dim=0)
+        self.adj2 = F.normalize(adj2, p=1, dim=0)
 
         self.H = torch.zeros(self.n1, self.n2, dtype=self.precision)
         self.anchors = get_anchor_pairs(dataset.train_data, gid1, gid2)

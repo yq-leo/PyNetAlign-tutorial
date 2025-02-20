@@ -51,12 +51,15 @@ html_theme = 'sphinx_rtd_theme'
 # -- Options for EPUB output
 epub_show_urls = 'footnote'
 
+print("==== Debugging PyNetAlign ====")
+print("PyNetAlign found:", PyNetAlign)
+print("Available attributes:", dir(PyNetAlign))
+
 
 def rst_jinja_render(app, _, source):
     """Enable Jinja templating in .rst files."""
     if hasattr(app.builder, "templates"):
-        rst_context = {"PyNetAlign": PyNetAlign,
-                       "sys": sys}
+        rst_context = {"PyNetAlign": PyNetAlign}
         source[0] = app.builder.templates.render_string(source[0], rst_context)
 
 
