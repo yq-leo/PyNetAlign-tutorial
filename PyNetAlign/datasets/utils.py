@@ -34,7 +34,7 @@ if __name__ == '__main__':
         save_filename='phone_email.pt',
         root='../../datasets')
 
-    phone_email = Dataset(root='../../datasets', name='phone_email', ratio=0.2, precision=64)
+    phone_email = Dataset(root='../../datasets', name='phone_email', train_ratio=0.2, precision=64)
     print(phone_email)
 
     # # Download the Douban dataset

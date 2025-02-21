@@ -11,7 +11,7 @@ class FoursquareTwitter(Dataset):
     def __init__(self,
                  root: Union[str, Path],
                  download: Optional[bool] = False,
-                 ratio: Optional[float] = 0.2,
+                 train_ratio: Optional[float] = 0.2,
                  precision: Optional[int] = 32,
                  seed: Optional[int] = 0):
 
@@ -24,7 +24,7 @@ class FoursquareTwitter(Dataset):
         if not self._check_integrity(root):
             raise RuntimeError('Foursquare-Twitter dataset not found or corrupted. You can use download=True to download it')
 
-        super(FoursquareTwitter, self).__init__(root=root, name='foursquare-twitter', ratio=ratio, precision=precision, seed=seed)
+        super(FoursquareTwitter, self).__init__(root=root, name='foursquare-twitter', train_ratio=train_ratio, precision=precision, seed=seed)
 
     def _check_integrity(self, root):
         return os.path.exists(os.path.join(root, 'foursquare-twitter.pt'))

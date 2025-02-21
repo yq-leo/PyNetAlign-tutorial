@@ -32,9 +32,9 @@ class IONE(BaseModel):
         self.two_order_x = IONEUpdate(graph1, out_dim, precision)
         self.two_order_y = IONEUpdate(graph2, out_dim, precision)
 
-        anchors = get_anchor_pairs(dataset.anchor_links, gid1, gid2)
-        self.anchor_map1 = {anchor[0]: anchor[1] for anchor in anchors}
-        self.anchor_map2 = {anchor[1]: anchor[0] for anchor in anchors}
+        anchors = get_anchor_pairs(dataset.train_data, gid1, gid2)
+        self.anchor_map1 = {anchor[0].item(): anchor[1].item() for anchor in anchors.cpu()}
+        self.anchor_map2 = {anchor[1].item(): anchor[0].item() for anchor in anchors.cpu()}
         # self.anchor_map1 = {f'{anchor[0]}_{gid1}': f'{anchor[1]}_{gid2}' for anchor in anchors}
         # self.anchor_map2 = {f'{anchor[1]}_{gid2}': f'{anchor[0]}_{gid1}' for anchor in anchors}
 
@@ -57,7 +57,11 @@ class IONE(BaseModel):
                          anchors=self.anchor_map2,
                          same_network=False)
         self.epochs_cnt += 1
-        return self.two_order_x.embeddings, self.two_order_y.embeddings
+
+        emb_x = F.normalize(self.two_order_x.embeddings, p=2, dim=1)
+        emb_y = F.normalize(self.two_order_y.embeddings, p=2, dim=1)
+
+        return emb_x, emb_y
 
     def to(self, device):
         self.two_order_x = self.two_order_x.to(device)
@@ -221,7 +225,8 @@ class IONEUpdate(BaseModel):
                 self.rho = self.init_rho * 0.0001
 
         edge_id = self.sample_edge(torch.rand(1).item(), torch.rand(1).item())
-        uid_1, uid_2 = self.graph.edge_index[:, edge_id]
+        uid_1, uid_2 = self.graph.edge_index[:, edge_id].cpu()
+        uid_1, uid_2 = uid_1.item(), uid_2.item()
 
         d = 0
         while d < self.num_negative + 1:
@@ -230,7 +235,8 @@ class IONEUpdate(BaseModel):
                 target = uid_2
             else:
                 neg_index = torch.randint(0, self.neg_table_size, (1,)).item()
-                target = self.neg_table[neg_index]
+                target = self.neg_table[neg_index].cpu().item()
+                assert not isinstance(target, torch.Tensor), 'Target should not be a tensor'
                 if target == uid_1 or target == uid_2:
                     continue
                 label = 0
@@ -256,7 +262,7 @@ class IONEUpdate(BaseModel):
             d = d + 1
 
         if uid_1 in anchors:
-            vec_u = two_order_embeddings[anchors[uid_1]] if anchors[uid_1] in two_order_embeddings else None
+            vec_u = two_order_embeddings[anchors[uid_1]] if not same_network else two_order_embeddings[uid_1]
             if vec_u is None:
                 self.embeddings[uid_1] += vec_error
             else:

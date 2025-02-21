@@ -11,7 +11,7 @@ class DBP15K_FR_EN(Dataset):
     def __init__(self,
                  root: Union[str, Path],
                  download: Optional[bool] = False,
-                 ratio: Optional[float] = 0.2,
+                 train_ratio: Optional[float] = 0.2,
                  precision: Optional[int] = 32,
                  seed: Optional[int] = 0):
 
@@ -24,7 +24,7 @@ class DBP15K_FR_EN(Dataset):
         if not self._check_integrity(root):
             raise RuntimeError('DBP15K_FR-EN dataset not found or corrupted. You can use download=True to download it')
 
-        super(DBP15K_FR_EN, self).__init__(root=root, name='dbp15k_fr-en', ratio=ratio, precision=precision, seed=seed)
+        super(DBP15K_FR_EN, self).__init__(root=root, name='dbp15k_fr-en', train_ratio=train_ratio, precision=precision, seed=seed)
 
     def _check_integrity(self, root):
         return os.path.exists(os.path.join(root, 'dbp15k_fr-en.pt'))
@@ -35,7 +35,7 @@ class DBP15K_JA_EN(Dataset):
     def __init__(self,
                  root: Union[str, Path],
                  download: Optional[bool] = False,
-                 ratio: Optional[float] = 0.2,
+                 train_ratio: Optional[float] = 0.2,
                  precision: Optional[int] = 32,
                  seed: Optional[int] = 0):
 
@@ -48,7 +48,7 @@ class DBP15K_JA_EN(Dataset):
         if not self._check_integrity(root):
             raise RuntimeError('DBP15K_JA-EN dataset not found or corrupted. You can use download=True to download it')
 
-        super(DBP15K_JA_EN, self).__init__(root=root, name='dbp15k_ja-en', ratio=ratio, precision=precision, seed=seed)
+        super(DBP15K_JA_EN, self).__init__(root=root, name='dbp15k_ja-en', train_ratio=train_ratio, precision=precision, seed=seed)
 
     def _check_integrity(self, root):
         return os.path.exists(os.path.join(root, 'dbp15k_ja-en.pt'))
@@ -59,7 +59,7 @@ class DBP15K_ZH_EN(Dataset):
     def __init__(self,
                  root: Union[str, Path],
                  download: Optional[bool] = False,
-                 ratio: Optional[float] = 0.2,
+                 train_ratio: Optional[float] = 0.2,
                  precision: Optional[int] = 32,
                  seed: Optional[int] = 0):
 
@@ -72,7 +72,7 @@ class DBP15K_ZH_EN(Dataset):
         if not self._check_integrity(root):
             raise RuntimeError('DBP15K_ZH-EN dataset not found or corrupted. You can use download=True to download it')
 
-        super(DBP15K_ZH_EN, self).__init__(root=root, name='dbp15k_zh-en', ratio=ratio, precision=precision, seed=seed)
+        super(DBP15K_ZH_EN, self).__init__(root=root, name='dbp15k_zh-en', train_ratio=train_ratio, precision=precision, seed=seed)
 
     def _check_integrity(self, root):
         return os.path.exists(os.path.join(root, 'dbp15k_zh-en.pt'))
