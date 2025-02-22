@@ -11,3 +11,4 @@ PyNetAlign.algorithms
     IsoRank
     IONE
     FINAL
+    REGAL
