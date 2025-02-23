@@ -3,11 +3,9 @@ import time
 import torch
 import numpy as np
 import torch.nn.functional as F
-from torch_geometric.data import Data
 from torch_geometric.utils import to_dense_adj, degree
 
 from PyNetAlign.data import Dataset
-from PyNetAlign.utils import get_anchor_pairs
 from .base_model import BaseModel
 
 

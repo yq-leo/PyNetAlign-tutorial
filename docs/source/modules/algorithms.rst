@@ -12,3 +12,4 @@ PyNetAlign.algorithms
     IONE
     FINAL
     REGAL
+    CrossMNA
