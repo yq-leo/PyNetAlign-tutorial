@@ -12,7 +12,7 @@ from .base_model import BaseModel
 
 
 class REGAL(BaseModel):
-    r"""REGAL algorithm for pairwise network alignment.
+    r"""REGAL algorithm for unsupervised pairwise attributed network alignment.
     Args:
         dataset (Dataset): PyNetAlign Dataset object containing the input graphs.
         gid1 (int): ID of the first graph for alignment.
@@ -91,7 +91,8 @@ class REGAL(BaseModel):
             attribute_dist = (attribute_emb[:, None, :] != landmarks_attr_emb[None, :, :]).to(self.precision).sum(dim=2)
         else:
             attribute_dist = 0
-        C = self.gammastruc * struct_dist + self.gammaattr * attribute_dist
+        # TODO: Test sensitivity for different choices of "distance" computation
+        C = torch.exp(-(self.gammastruc * struct_dist + self.gammaattr * attribute_dist))
 
         W_pinv = torch.pinverse(C[sampled_landmarks])
         U, X, V = torch.svd(W_pinv)
