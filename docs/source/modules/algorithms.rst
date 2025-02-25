@@ -13,3 +13,4 @@ PyNetAlign.algorithms
     FINAL
     REGAL
     CrossMNA
+    NetTrans

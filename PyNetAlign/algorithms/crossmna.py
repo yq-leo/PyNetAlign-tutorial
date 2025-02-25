@@ -37,7 +37,7 @@ class CrossMNA(BaseModel):
 
         self.gids = gids
         self.graphs = [dataset.pyg_graphs[gid] for gid in gids]
-        self.anchor_links = dataset.train_data
+        self.anchor_links = dataset.train_data[:, gids]
 
         self.batch_size = batch_size
         self.neg_samples = neg_samples

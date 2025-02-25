@@ -7,6 +7,7 @@ class BaseModel:
     def __init__(self, precision: Optional[int] = 32):
         assert precision in [32, 64], 'Precision must be either 32 or 64'
         self.precision = torch.float32 if precision == 32 else torch.float64
+        self.device = 'cpu'
 
     def __call__(self, *args, **kwargs):
         return self.forward(*args, **kwargs)
