@@ -2,5 +2,4 @@ sphinx
 sphinx-rtd-theme
 torch
 torch_geometric
-torch_scatter
 gdown

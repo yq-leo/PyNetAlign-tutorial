@@ -1,4 +1,3 @@
-from torch_scatter import scatter_add
 import torch
 
 
@@ -8,8 +7,9 @@ def degree_normalize_sparse_tensor(edge_index, edge_weight, shape):
 
     row, col = edge_index
     num_nodes = shape[0]
-
-    deg = scatter_add(edge_weight, row, dim=0, dim_size=num_nodes)
+    deg = torch.zeros(num_nodes, dtype=edge_weight.dtype, device=edge_weight.device)
+    deg = deg.scatter_reduce(0, row, edge_weight, reduce="sum", include_self=False)
+    # deg = scatter_add(edge_weight, row, dim=0, dim_size=num_nodes)
     deg_inv_sqrt = deg.pow(-1)
     deg_inv_sqrt[deg_inv_sqrt == float('inf')] = 0
 
@@ -23,7 +23,9 @@ def sparse_softmax(edge_index, edge_weight, shape):
     row, col = edge_index
     num_nodes = shape[0]
     edge_weight = torch.exp(edge_weight)
-    deg = scatter_add(edge_weight, row, dim=0, dim_size=num_nodes) + 1e-16
+    deg = torch.zeros(num_nodes, dtype=edge_weight.dtype, device=edge_weight.device)
+    deg = deg.scatter_reduce(0, row, edge_weight, reduce="sum", include_self=False)
+    # deg = scatter_add(edge_weight, row, dim=0, dim_size=num_nodes) + 1e-16
     deg_inv_sqrt = deg.pow(-1)
     deg_inv_sqrt[deg_inv_sqrt == float('inf')] = 0
 
